@@ -8,7 +8,7 @@ echo -n ".idea\n.DS_Store" > .gitignore
 mkdir -p unity
 /Applications/Unity/Hub/Editor/2022.3.13f1/Unity.app/Contents/MacOS/Unity -createProject $(pwd)/unity/gamelift-sample-test
 curl -o unity/gamelift-sample-test/.gitignore https://raw.githubusercontent.com/github/gitignore/main/Unity.gitignore
-# add newly created project into unity hub
+# add newly created project into unity hub (manual)
 ```
 
 ### Install Plugin (and prereqs)
@@ -28,5 +28,8 @@ mkdir -p /tmp/$plugin_folder
 unzip /tmp/$plugin_zip_filename -d /tmp/$plugin_folder
 find /tmp/$plugin_folder -type file -name '*.zip' | sed 's/.zip//g' | xargs -I{} unzip {}.zip -d {}
 find /tmp/$plugin_folder -type file -name '*.tgz' | xargs -I{} mv {} $(pwd)/unity/gamelift-sample-test/Packages
+# (manual) follow instructions to use unity editor's GUI to import the tarfile packages
+# (undocumented) this package requires com.unity.ui
+# (manual) follow instructions to set up the new test project provided by aws gamelift unity plugin
 ```
-
+Use gamelift anywhere features to test multiplayer server interactions locally.

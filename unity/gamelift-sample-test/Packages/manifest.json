@@ -2,6 +2,7 @@
   "dependencies": {
     "com.amazonaws.gamelift": "file:com.amazonaws.gamelift-2.1.0.tgz",
     "com.amazonaws.gameliftserver.sdk": "file:com.amazonaws.gameliftserver.sdk-5.1.2.tgz",
+    "com.unity.ide.rider": "3.0.28",
     "com.unity.toolchain.macos-x86_64-linux-x86_64": "2.0.9",
     "com.unity.ugui": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
