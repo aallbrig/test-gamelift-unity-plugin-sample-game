@@ -1,5 +1,20 @@
 {
   "dependencies": {
+    "com.amazonaws.gamelift": {
+      "version": "file:com.amazonaws.gamelift-2.1.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "2.0.0"
+      }
+    },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.sysroot": {
       "version": "2.0.10",
       "depth": 1,
