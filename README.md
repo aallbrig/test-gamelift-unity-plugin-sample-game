@@ -37,4 +37,5 @@ echo 'GameLiftSettings.yaml' >> unity/gamelift-sample-test/.gitignore
 Use gamelift anywhere features to test multiplayer server interactions locally.
 
 __Note:__ While using my VPN I found that the game client crashed when trying to connect to the multiplayer game server in my unity editor.
-__Note:__ I found similar issues when using gamelift anywhere from my phone's hotspot.
+
+__Note:__ I found similar issues when using gamelift anywhere from my phone's hotspot. Not sure why this is happening and I'll have to attach a debugger to the game client process to see where the game client code is failing under these two noted conditions.
