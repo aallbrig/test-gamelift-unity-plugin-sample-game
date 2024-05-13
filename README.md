@@ -31,5 +31,10 @@ find /tmp/$plugin_folder -type file -name '*.tgz' | xargs -I{} mv {} $(pwd)/unit
 # (manual) follow instructions to use unity editor's GUI to import the tarfile packages
 # (undocumented) this package requires com.unity.ui
 # (manual) follow instructions to set up the new test project provided by aws gamelift unity plugin
+# ignore GameLiftSettings.yaml file
+echo 'GameLiftSettings.yaml' >> unity/gamelift-sample-test/.gitignore
 ```
 Use gamelift anywhere features to test multiplayer server interactions locally.
+
+__Note:__ While using my VPN I found that the game client crashed when trying to connect to the multiplayer game server in my unity editor.
+__Note:__ I found similar issues when using gamelift anywhere from my phone's hotspot.
