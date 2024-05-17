@@ -40,11 +40,18 @@ __Note:__ While using my VPN I found that the game client crashed when trying to
 
 __Note:__ I found similar issues when using gamelift anywhere from my phone's hotspot. Not sure why this is happening and I'll have to attach a debugger to the game client process to see where the game client code is failing under these two noted conditions.
 
-### Gamelift Unity Plugin + GameLift Anywhere + VPN observations
+### Observed Problem #1: Inconsistent game client connection to game server when on different internet types?
+Replication steps:
 - Set up internet connection in one of four configurations (regular internet, VPN internet, phone hotspot, phone hotspot + phone VPN)
 - Produce dev build of OSX game client
-- Stop/Start game server in unity editor
-- Close/Start OSX game client
+  - Game > Builder > Build OSX (dev) in Unity Editor
+  - Produces build @ unity/gamelift-sample-test/Builds/OSX_amd64_dev/game.client.app
+- Stop/Start game server in unity editor before each trial
+  - Sample project will game over when a player disconnects, so must be restarted via stop/ "Launch Server in Editor" in plugin UI
+- Close/Start OSX game client before each trial
+
+
+Gamelift Unity Plugin + GameLift Anywhere + VPN observations
 
 | Observation No. | Regular Internet                                   | VPN Internet | Phone Hotspot | Phone Hotspot + Phone VPN |
 | --------------- |----------------------------------------------------| ------------ | ------------- | ------------------------- |
@@ -64,3 +71,12 @@ __Note:__ Sometimes I have to fully reset the gamelift anywhere when I move loca
 __Note:__ On a failed test, the game client app will be in "not responding" state. Open activity monitor and force close the application to be able to restart.
 
 __Note:__ Sometimes when rebuilding the game client, in the build folder will appear `GameLiftServerRuntimeSettings.yaml` instead of `GameLiftAnywhereClientSettings.yaml`. When I start the game client with the `GameLiftServerRuntimeSettings.yaml` file will result in errors in the game client. Given I'm building the game client using a build script (see `BuildBuilder.cs` file), I'm uncertain why one file or the other shows up, lol. I confirmed that the `GameLiftClientSettings` scriptable object still has the "Use GameLift Anywhere" checkmark checked.
+
+Questions:
+- What is the state of the world as measured by cli output from `aws gamelift` commands on successful connection?
+- What is the state of the world as measured by cli output from `aws gamelift` commands on unsuccessful connection?
+- How many problem states exist while running through trials?
+- What relevant spots might there be to throw up a debug breakpoint, for the game server running in the unity editor?
+- What relevant spots might there be to throw up a debug breakpoint, for the game client build process?
+- Under what circumstances does the `GameLiftServerRuntimeSettings.yaml` yaml file get produced in the OSX build folder?
+- Under what circumstances does the `GameLiftAnywhereClientSettings.yaml` yaml file get produced in the OSX build folder?
