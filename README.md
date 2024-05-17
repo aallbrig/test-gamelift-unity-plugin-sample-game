@@ -39,3 +39,27 @@ Use gamelift anywhere features to test multiplayer server interactions locally.
 __Note:__ While using my VPN I found that the game client crashed when trying to connect to the multiplayer game server in my unity editor.
 
 __Note:__ I found similar issues when using gamelift anywhere from my phone's hotspot. Not sure why this is happening and I'll have to attach a debugger to the game client process to see where the game client code is failing under these two noted conditions.
+
+### Gamelift Unity Plugin + GameLift Anywhere + VPN observations
+- Set up internet connection in one of four configurations (regular internet, VPN internet, phone hotspot, phone hotspot + phone VPN)
+- Produce dev build of OSX game client
+- Stop/Start game server in unity editor
+- Close/Start OSX game client
+
+| Observation No. | Regular Internet                                   | VPN Internet | Phone Hotspot | Phone Hotspot + Phone VPN |
+| --------------- |----------------------------------------------------| ------------ | ------------- | ------------------------- |
+| 1               | ✅(no wait)                                         |              |               |                           |
+| 2               | ✅(no wait)                                         |              |               |                           |
+| 3               | ❌(client start before server healthcheck log)      |              |               |                           |
+| 4               | ❌(client start right after server healthcheck log) |              |               |                           |
+| 5               | ✅(no wait)                                         |              |               |                           |
+| 6               | ❌(no wait)                                         |              |               |                           |
+| 7               | ❌(after 2nd healthcheck log from server)           |              |               |                           |
+| 8               | ❌(no wait)                                         |              |               |                           |
+| 9               | ❌(no wait)                                         |              |               |                           |
+| 10              | ❌(no wait)                                         |              |               |                           |
+
+__Note:__ Sometimes I have to fully reset the gamelift anywhere when I move locations, by going into the AWS gamelift dashboard deleting resources and recreating them in the gamelift plugin UI in unity editor. I also do this when switching between internet configuration, just to observe from a clean place. Restart unity editor so the plugin fully detects deleted fleets & locations. Rebuild the game client after this reset, in case that's important too.
+
+__Note:__ On a failed test, the game client app will be in "not responding" state. Open activity monitor and force close the application to be able to restart.
+
