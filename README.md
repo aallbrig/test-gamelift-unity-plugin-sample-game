@@ -63,3 +63,4 @@ __Note:__ Sometimes I have to fully reset the gamelift anywhere when I move loca
 
 __Note:__ On a failed test, the game client app will be in "not responding" state. Open activity monitor and force close the application to be able to restart.
 
+__Note:__ Sometimes when rebuilding the game client, in the build folder will appear `GameLiftServerRuntimeSettings.yaml` instead of `GameLiftAnywhereClientSettings.yaml`. When I start the game client with the `GameLiftServerRuntimeSettings.yaml` file will result in errors in the game client. Given I'm building the game client using a build script (see `BuildBuilder.cs` file), I'm uncertain why one file or the other shows up, lol. I confirmed that the `GameLiftClientSettings` scriptable object still has the "Use GameLift Anywhere" checkmark checked.
