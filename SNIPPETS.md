@@ -60,3 +60,61 @@ __Make sure `GameLiftAnywhereClientSettings.yaml` exists in game client build fo
 game_client_build_dir="$(git rev-parse --show-toplevel)/unity/gamelift-sample-test/Builds/OSX_amd64_dev"
 [ -f "$game_client_build_dir/GameLiftAnywhereClientSettings.yaml" ] && echo "Found GameLiftAnywhereClientSettings.yaml" || echo "GameLiftAnywhereClientSettings.yaml does not exist in $game_client_build_dir"
 ```
+__(WIP) How to tell when unity editor game server is ready to receive game client connects, from aws gamelift perspective__
+```bash
+fleet_id=$(grep -m 1 'AnywhereFleetId:' $(git rev-parse --show-toplevel)/unity/gamelift-sample-test/GameLiftSettings.yaml | awk '{print $2}')
+location=$(grep -m 1 'AnywhereFleetLocation:' $(git rev-parse --show-toplevel)/unity/gamelift-sample-test/GameLiftSettings.yaml | awk '{print $2}')
+region=$(grep -m 1 'Region:' $(git rev-parse --show-toplevel)/unity/gamelift-sample-test/GameLiftSettings.yaml | awk '{print $2}')
+while true
+do
+    # date commands for BSD because I'm on macbook pro
+    current_time=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    five_minutes_ago=$(date -u -v-5M +%Y-%m-%dT%H:%M:%SZ)
+    active_instance_metric_data=$(aws cloudwatch get-metric-statistics \
+        --namespace "AWS/GameLift" \
+        --metric-name "ActiveInstances" \
+        --dimensions Name=FleetId,Value=${fleet_id} Name=Location,Value=${location} \
+        --statistics Maximum \
+        --period 60 \
+        --start-time $five_minutes_ago \
+        --end-time $current_time \
+        --region $region \
+        --query 'Datapoints[0].Maximum')
+    active_server_processes_metric_data=$(aws cloudwatch get-metric-statistics \
+        --namespace "AWS/GameLift" \
+        --metric-name "ActiveServerProcesses" \
+        --dimensions Name=FleetId,Value=${fleet_id} Name=Location,Value=${location} \
+        --statistics Sum \
+        --period 60 \
+        --start-time $five_minutes_ago \
+        --end-time $current_time \
+        --region $region \
+        --query 'Datapoints[0].Sum' --output text)
+    healthy_server_processes_metric_data=$(aws cloudwatch get-metric-statistics \
+        --namespace "AWS/GameLift" \
+        --metric-name "PercentHealthyServerProcesses" \
+        --dimensions Name=FleetId,Value=${fleet_id} Name=Location,Value=${location} \
+        --statistics Average \
+        --period 60 \
+        --start-time $five_minutes_ago \
+        --end-time $current_time \
+        --region $region \
+        --query 'Datapoints[0].Average' --output text)
+    available_game_sessions_metric_data=$(aws cloudwatch get-metric-statistics \
+        --namespace "AWS/GameLift" \
+        --metric-name "AvailableGameSessions" \
+        --dimensions Name=FleetId,Value=${fleet_id} Name=Location,Value=${location} \
+        --statistics Sum \
+        --period 60 \
+        --start-time $five_minutes_ago \
+        --end-time $current_time \
+        --region $region \
+        --query 'Datapoints[0].Sum' --output text)
+    clear
+    echo "active instance latest metric: $active_instance_metric_data"
+    echo "active server processes latest metric: $active_server_processes_metric_data"
+    echo "available game sessions latest metric: $available_game_sessions_metric_data"
+    echo "healthy server process latest metric: $healthy_server_processes_metric_data"
+    sleep 1
+done
+```
