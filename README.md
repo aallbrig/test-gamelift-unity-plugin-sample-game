@@ -43,7 +43,7 @@ __Note:__ I found similar issues when using gamelift anywhere from my phone's ho
 # Problems
 As I'm testing through this sample project I have found issues that haven't been documented. I suspect many other gamelift users experience these issues, especially when testing their games locally. Not to get too far ahead of myself but I suspect adding more functionality to the AWS gamelift plugin, specifically the Host with Anywhere tab, will help many other game devs.
 
-### Observed Problem #1: Inconsistent game client connection to game server when on different internet types?
+### ~Observed Problem #1: Inconsistent game client connection to game server when on different internet types?~ See Problem #3
 __Post-initial findings:__ The inconsistent connection behavior exists on all forms of internet connection. When I was testing on my phone's hotspot, I found if I tried to connect a game client to the unity editor run game server after waiting some time after a failure it would connect. This leads me to believe the issue is not with the internet connection type but with the local resource being "ready" from AWS gamelift's point of view. Why the game client would freeze is a little mystery but one thing at a time.
 
 I _need_ consistency, predictability of gamelift anywhere behavior so as I'm developing and testing my multiplayer game logic
@@ -106,3 +106,12 @@ BuildPipeline.BuildPlayer(new BuildPlayerOptions
     options = BuildOptions.Development
 });
 ```
+
+### Observed Problem #3: It takes between 0 and 3 minutes for a game server started in unity editor for gamelift to see "available game session"
+It takes between 0 and 3 minutes for a game server started from the unity editor using the gamelift "Anywhere" features to actually be available to connect to from the game client.
+This is the reason why I've been seeing "inconsistent" behavior.
+
+I don't know exactly what to measure to know when the game server is really, really ready but I've added to SNIPPETS.md an attempt predict if the game client will be able to query gamelift for my local game server. Ideally once a game server completes the gamelift game server startup process via the C# SDK, it is immediately available for game clients. In reality, I need to wait 0 to 3 minutes.
+
+Questions:
+- Why isn't a game server immediately available via gamelift?
