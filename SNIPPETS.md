@@ -34,9 +34,9 @@ done
 ```
 __Check that resources exist created by the gamelift unity plugin when using the 'Host with Anywhere' plugin tab (assume default values)
 ```bash
+fleet_id=$(grep -m 1 'AnywhereFleetId:' $(git rev-parse --show-toplevel)/unity/gamelift-sample-test/GameLiftSettings.yaml | awk '{print $2}')
 compute_name=$(grep -m 1 'ComputeName:' $(git rev-parse --show-toplevel)/unity/gamelift-sample-test/GameLiftSettings.yaml | awk '{print $2}')
 ip_address=$(grep -m 1 'IpAddress:' $(git rev-parse --show-toplevel)/unity/gamelift-sample-test/GameLiftSettings.yaml | awk '{print $2}')
-fleet_id=$(grep -m 1 'AnywhereFleetId:' $(git rev-parse --show-toplevel)/unity/gamelift-sample-test/GameLiftSettings.yaml | awk '{print $2}')
 output=$(aws gamelift list-compute --fleet-id $fleet_id --output json)
 compute_name=$(echo "$output" | jq -r '.ComputeList[0].ComputeName')
 ip_address=$(echo "$output" | jq -r '.ComputeList[0].IpAddress')
@@ -53,4 +53,10 @@ if [ -n "$location_exists" ]; then
 else
   echo "Location $location does not exist."
 fi
+```
+__Make sure `GameLiftAnywhereClientSettings.yaml` exists in game client build folder__
+```bash
+# make sure GameLiftAnywhereClientSettings.yaml exists in game client build folder
+game_client_build_dir="$(git rev-parse --show-toplevel)/unity/gamelift-sample-test/Builds/OSX_amd64_dev"
+[ -f "$game_client_build_dir/GameLiftAnywhereClientSettings.yaml" ] && echo "Found GameLiftAnywhereClientSettings.yaml" || echo "GameLiftAnywhereClientSettings.yaml does not exist in $game_client_build_dir"
 ```

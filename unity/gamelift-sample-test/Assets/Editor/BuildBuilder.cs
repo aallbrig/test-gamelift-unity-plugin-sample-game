@@ -26,6 +26,7 @@ namespace Editor
                 scenes = Scenes,
                 locationPathName = "Builds/OSX_amd64_dev/game.client.app",
                 target = BuildTarget.StandaloneOSX,
+                subtarget = (int)StandaloneBuildSubtarget.Player,
                 options = BuildOptions.Development
             });
         }
